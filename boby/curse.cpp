@@ -8,6 +8,7 @@ struct dOD{
 		int month;
 		int year;
 	};
+
 	
 	struct infOD{
 		std::string protocol;	

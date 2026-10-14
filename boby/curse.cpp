@@ -279,3 +279,51 @@ int main(){
     OD_OutputData(mOD, N);
 	OD_OutputData(mOD, N, [](dOD& m){return m.dateFI.day > 14;});
 }
+
+void OD_OutputData(dOD* mOD, int N, std::string field, std::string argument){
+	if (field == "rating_problem" || field == "count_problem" || field == "day" || field == "month" || field == "year") {
+   		int value = std::stoi(argument); 
+	}
+	else if (field == "earn_money") {
+  		double value = std::stod(argument);
+	}
+	else if (field == "protocol" || field == "person") {
+    	std::string value = argument; 
+	}
+	else{std::time_t value = static_cast<std::time_t>(std::stoll(argument));}
+	
+	for (int i=0; i<N; i++){
+		int Flag = 0; 
+    // Проверка полей из структуры dateOD (dataFI)
+    if (field == "day") {
+        if (std::to_string(mOD[i].dataFI.day) == value) { Flag = 1; continue;}
+    }
+    else if (field == "month") {
+        if (std::to_string(mOD[i].dataFI.month) == value) { Flag = 1; break; }
+    }
+    else if (field == "year") {
+        if (std::to_string(mOD[i].dataFI.year) == value) { Flag = 1; break; }
+    }
+    
+    // Проверка полей из структуры infOD (info)
+    else if (field == "protocol") {
+        if (mOD[i].infOD.protocol == value) { Flag = 1; break; }
+    }
+    else if (field == "person") {
+        if (mOD[i].infOD.person == value) { Flag = 1; break; }
+    }
+    else if (field == "time_problem") {
+        if (std::to_string(mOD[i].infOD.time_problem) == value) { Flag = 1; break; }
+    }
+    else if (field == "count_problem") {
+        if (std::to_string(mOD[i].infOD.count_problem) == value) { Flag = 1; break; }
+    }
+    else if (field == "rating_problem") {
+        if (std::to_string(mOD[i].infOD.rating_problem) == value) { Flag = 1; break; }
+    }
+    else if (field == "earn_money") {
+        if (std::to_string(mOD[i].infOD.earn_money) == value || 
+            (value != "" && mOD[i].info.earn_money == std::stod(value))) { Flag = 1; break;}
+        }
+	}
+}

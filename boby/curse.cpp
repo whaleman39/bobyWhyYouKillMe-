@@ -1,6 +1,35 @@
 #include <iostream>
 #include <ctime>
 #include <random>
+/*
+1. Создана структура dOD
+2. Добавлена подстройка под dOD std::istream (std::cin)
+3. Добавлена функция преобразования день.месяц.год в unix
+4. Добавлена возможность генерации данных в структуру (любое кол-во, с любого номера элемента)
+5. Добавлена возможность вывода OD_OutputData
+   1. Передано: mOD, N 
+   2. Передано: mOD, N, predicate
+6. Добавлена возмондость ввода
+   1. Передано: mOD - Всегда только элемент 0.
+   2. Передано: mOD, N - Полностью ручной ввод от 0 до N элементов
+   3. Передано: mOD, N, Nstart - Ручной ввод от N до Nstart
+7. Сортировка пузырьком OD_SortData (вообще по любому параметру, представлен в комментарии пример)
+8. main()
+   1. Получение N и выдача памяти на mOD
+   2. (Вариант полного ручного ввода)
+   2. Ручной ввод первого
+   3. Ручной ввод N-2 кол-ва (внутри проверка на больше нуля)
+   4. Ввод оставшихся (2-а) через генерацию
+   5. Вывод всех данных
+   6. Сортировка
+   7. Вывод всех в отсортированном вмде
+   8. Вывод по критерию
+*/
+//+++++OD_InputData - внесение данных (всех) без перегрузки
+//+++++OD_OutputData - вывод всех данных без перегрузкм
+//+++++Далее сказано использовать перегрузку для OD_InputData
+//+++++OD_SortData Сортировка по первому полю структуры 
+//+++++OD_OutputData - Вывод данных по критерию
 
 struct dOD{
 	struct dateOD{
@@ -8,8 +37,6 @@ struct dOD{
 		int month;
 		int year;
 	};
-
-
 	
 	struct infOD{
 		std::string protocol;	
@@ -141,37 +168,6 @@ void OD_OutputData(dOD* mOD, int N, T predicate){
    }
 }
 //----------------------OD_InputData----------------------------
-void OD_InputData(dOD* mOD, int N){
-	std::cout<<"--------------Input-------------"<<std::endl;
-   for (int i=0; i<N; i++){
-      dOD& m = mOD[i];
-      std::cout<<"Element number "<<i<<std::endl;
-      
-      std::cout<<"Day=";           std::cin>>m.dateFI.day;
-      std::cout<<"Month=";         std::cin>>m.dateFI.month;
-      std::cout<<"Year=";          std::cin>>m.dateFI.year;
-      std::cout<<"Protocol=";      std::cin>>m.infFI.protocol;
-      std::cout<<"Person (AnalyticLogs, Architect, Pentester, Engineer)=";        std::cin>>m.infFI.person;
-      std::cout<<"TimeProblem=";   std::cin>>m.infFI.time_problem;
-      std::cout<<"CountProblem=";  std::cin>>m.infFI.count_problem;
-      std::cout<<"RatingProblem="; std::cin>>m.infFI.rating_problem;
-
-      std::string* arrayPersons = new std::string[4]{"AnalyticLogs", "Architect", "Pentester", "Engineer"};
-	  int* arrayTarif = new int[4]{25, 20, 15, 10};
-	  int number = 0;
-      for (int i=0; i<4; i++){
-          if (m.infFI.person == arrayPersons[i]){number = i; break;}
-      }
-	  m.infFI.earn_money = arrayTarif[number] * m.infFI.count_problem;
-      std::cout << "EarnMoney=" << m.infFI.earn_money;
-
-	  delete[] arrayTarif; delete[] arrayPersons;
-      
-      for (int j=0; j<10; j++){ std::cout<<"+"; }
-      std::cout<<std::endl;
-   }
-}
-
 // Перегрузка для одного элемента (без цикла)
 void OD_InputData(dOD* mOD) {
 	std::cout<<"--------------InputFirstElement-------------"<<std::endl;
@@ -200,13 +196,44 @@ void OD_InputData(dOD* mOD) {
 	std::cout<<std::endl;
 }
 
-// Перегрузка функции, через перегрузку std::cin (фактически это уже другая функция OD_InputData)
+void OD_InputData(dOD* mOD, int N){
+	std::cout<<"--------------Input-------------"<<std::endl;
+   for (int i=0; i<N; i++){
+	  //Возможна замена всего этого блока на прописанрый std::cin>>mOD[i]
+	  dOD& m = mOD[i];
+      std::cout<<"Element number "<<i<<std::endl;
+      
+      std::cout<<"Day=";           std::cin>>m.dateFI.day;
+      std::cout<<"Month=";         std::cin>>m.dateFI.month;
+      std::cout<<"Year=";          std::cin>>m.dateFI.year;
+      std::cout<<"Protocol=";      std::cin>>m.infFI.protocol;
+      std::cout<<"Person (AnalyticLogs, Architect, Pentester, Engineer)=";        std::cin>>m.infFI.person;
+      std::cout<<"TimeProblem=";   std::cin>>m.infFI.time_problem;
+      std::cout<<"CountProblem=";  std::cin>>m.infFI.count_problem;
+      std::cout<<"RatingProblem="; std::cin>>m.infFI.rating_problem;
+
+      std::string* arrayPersons = new std::string[4]{"AnalyticLogs", "Architect", "Pentester", "Engineer"};
+	  int* arrayTarif = new int[4]{25, 20, 15, 10};
+	  int number = 0;
+      for (int i=0; i<4; i++){
+          if (m.infFI.person == arrayPersons[i]){number = i; break;}
+      }
+	  m.infFI.earn_money = arrayTarif[number] * m.infFI.count_problem;
+      std::cout << "EarnMoney=" << m.infFI.earn_money;
+
+	  delete[] arrayTarif; delete[] arrayPersons;
+      
+      for (int j=0; j<10; j++){ std::cout<<"+"; }
+      std::cout<<std::endl;
+   }
+}
+
 void OD_InputData(dOD* mOD, int N, int Nstart) {
 	if (N == 0){return;}
 	std::cout<<"--------------Input-------------"<<std::endl;
     for (int i = Nstart; i < N; i++) {
         std::cout << "Element number " << i << std::endl;
-        std::cin >> mOD[i]; // Использует оператор, который мы написали выше
+        std::cin >> mOD[i];
         
 		std::cout<<std::endl;
         for (int j = 0; j < 10; j++) { std::cout << "-"; }
@@ -238,7 +265,7 @@ int main(){
 	int N; std::cin>>N; std::cout<<std::endl;
 	
 	dOD* mOD = new dOD[N];
-    int Nstart = 0; //для generation
+    int Nstart = 0; 
     
 	//OD_InputData(mOD, N); Nstart = N; //Полностью ручной ввод
 	OD_InputData(mOD); Nstart ++;
@@ -251,11 +278,4 @@ int main(){
     OD_SortData(mOD, N);
     OD_OutputData(mOD, N);
 	OD_OutputData(mOD, N, [](dOD& m){return m.dateFI.day > 14;});
-
-
-    //+++++OD_InputData - внесение данных (всех) без перегрузки
-    //+++++OD_OutputData - вывод всех данных без перегрузкм
-    //+++++Далее сказано использовать перегрузку для OD_InputData
-    //+++++OD_SortData Сортировка по первому полю структуры 
-    //+++++OD_OutputData - Вывод данных по критерию
 }
